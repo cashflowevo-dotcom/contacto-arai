@@ -14,11 +14,11 @@ main{width:min(100%,520px)}.top{text-align:center}.eyebrow{font:12px monospace;l
 </style>
 </head>
 <body><main>
-<header class="top"><div class="eyebrow">♡ IRVING'S LITTLE ARCADE ♡</div><h1>Gatitos del corazón</h1><p class="sub">Una miniaventura para Pao. Ayuda a Michi a recoger 5 corazones perdidos por el jardín mágico. ✨</p></header>
+<header class="top"><div class="eyebrow">♡ IRVING'S LITTLE ARCADE ♡</div><h1>Gatitos del corazón</h1><p class="sub">Una miniaventura para Pao con Kuromi, Anubis, Roja y Mami. Ayuda a Anubis a recoger 5 corazones por el jardín mágico. ✨</p></header>
 <section class="panel">
 <div class="stats"><span id="status">MISIÓN: EMPEZAR</span><span id="score">♡ 0 / 5</span></div>
 <div class="gamewrap"><canvas id="game" width="320" height="360" aria-label="Juego: mueve al gatito y recoge corazones"></canvas>
-<div class="overlay" id="overlay"><div class="modal"><div class="kitty">🐈‍⬛💗</div><h2 id="modalTitle">¡Hola, Pao!</h2><p id="modalText">Michi necesita tu ayuda para encontrar cinco corazones. Muévete por el jardín y recógelos todos para desbloquear un mensajito secreto de Irving. 💜</p><button class="btn" id="start">¡A jugar! ♡</button></div></div></div>
+<div class="overlay" id="overlay"><div class="modal"><div class="kitty">🐈‍⬛💗</div><h2 id="modalTitle">¡Hola, Pao!</h2><p id="modalText">Anubis, Kuromi, Roja y Mami necesitan tu ayuda para encontrar cinco corazones. ¡Recógelos todos y desbloquea un mensajito secreto de Irving! 💜</p><button class="btn" id="start">¡A jugar! ♡</button></div></div></div>
 <div class="controls" aria-label="Controles del juego"><button class="control up" data-dir="up" aria-label="Arriba">▲</button><button class="control left" data-dir="left" aria-label="Izquierda">◀</button><button class="control down" data-dir="down" aria-label="Abajo">▼</button><button class="control right" data-dir="right" aria-label="Derecha">▶</button></div>
 <p class="help">Usa las flechas, WASD o los botones. En celular, también puedes mantener presionado un botón. ♡</p>
 </section><div class="footer">LEVEL 01 · MADE WITH LOVE BY IRVING <span class="heartline">♥</span></div>
@@ -38,19 +38,36 @@ function draw(){ctx.clearRect(0,0,W,H);ctx.fillStyle='#15132b';ctx.fillRect(0,0,
  ctx.fillStyle='#302348';ctx.fillRect(130,0,40,H);ctx.fillRect(0,170,W,25);
  // tiny plants
  for(let i=0;i<9;i++){let x=(i*37+12)%W,y=(i*43+20)%H;ctx.fillStyle='#5dbb9a';ctx.fillRect(x,y,4,8);ctx.fillRect(x-3,y+3,3,3)}
+ // Los cuatro michis de la familia: Kuromi, Anubis, Roja y Mami
+ drawMiniCat(31,29,'#f7f0e8','#9b6b48','Kuromi');
+ drawMiniCat(116,29,'#8b817e','#5b463e','Anubis');
+ drawMiniCat(204,29,'#f4eee9','#292333','Roja');
+ drawMiniCat(289,29,'#aaa5b8','#d9d1e7','Mami');
  hearts.forEach(h=>{if(h.got)return;let bob=Math.sin(Date.now()/350+h.phase)*2;drawHeart(h.x,h.y+bob, '#ff78c6')});
  drawCat(player.x,player.y);
  // border
  ctx.strokeStyle='#7d5b9c';ctx.lineWidth=3;ctx.strokeRect(2,2,W-4,H-4);
 }
 function drawHeart(x,y,color){ctx.fillStyle=color;ctx.fillRect(x-7,y-5,6,6);ctx.fillRect(x+1,y-5,6,6);ctx.fillRect(x-11,y-1,22,7);ctx.fillRect(x-7,y+6,14,5);ctx.fillRect(x-3,y+11,6,4);ctx.fillStyle='#ffd5ed';ctx.fillRect(x-5,y-3,3,3)}
-function drawCat(x,y){ // pixel kitten sprite
- ctx.fillStyle='#0c0915';ctx.fillRect(x-12,y-4,24,17);ctx.fillRect(x-10,y-13,20,13);ctx.fillRect(x-10,y-20,6,8);ctx.fillRect(x+4,y-20,6,8);
- ctx.fillStyle='#f5e9ff';ctx.fillRect(x-8,y-11,16,8);ctx.fillRect(x-9,y+1,18,9);
- ctx.fillStyle='#ff9bd6';ctx.fillRect(x-8,y-18,3,4);ctx.fillRect(x+5,y-18,3,4);
- ctx.fillStyle='#4d315f';ctx.fillRect(x-5,y-9,3,3);ctx.fillRect(x+3,y-9,3,3);ctx.fillRect(x-1,y-5,3,2);
- ctx.fillStyle='#ffb6dc';ctx.fillRect(x-3,y-4,6,2);ctx.fillRect(x-9,y+10,5,4);ctx.fillRect(x+4,y+10,5,4);
- ctx.fillStyle='#f5e9ff';ctx.fillRect(x+10,y+1,7,3);ctx.fillRect(x+14,y-2,3,4);
+function drawMiniCat(x,y,fur,patch,name){
+ // Pequeños retratos pixelados con sus nombres
+ ctx.fillStyle='#100b1b';ctx.fillRect(x-7,y-2,14,9);ctx.fillRect(x-6,y-8,12,7);ctx.fillRect(x-6,y-12,4,5);ctx.fillRect(x+2,y-12,4,5);
+ ctx.fillStyle=fur;ctx.fillRect(x-5,y-7,10,6);ctx.fillRect(x-6,y+1,12,6);
+ ctx.fillStyle=patch;ctx.fillRect(x-5,y-7,4,4);ctx.fillRect(x+1,y+2,4,4);
+ ctx.fillStyle='#ffb6dc';ctx.fillRect(x-4,y-11,2,2);ctx.fillRect(x+3,y-11,2,2);
+ ctx.fillStyle='#34213e';ctx.fillRect(x-3,y-5,2,2);ctx.fillRect(x+2,y-5,2,2);
+ ctx.fillStyle='#e9d9ff';ctx.font='7px monospace';ctx.textAlign='center';ctx.fillText(name,x,y+17);
+}
+function drawCat(x,y){ // Anubis: gris/café atigrado, con pecho clarito
+ ctx.fillStyle='#15111d';ctx.fillRect(x-12,y-4,24,17);ctx.fillRect(x-10,y-13,20,13);ctx.fillRect(x-10,y-20,6,8);ctx.fillRect(x+4,y-20,6,8);
+ ctx.fillStyle='#8b817e';ctx.fillRect(x-8,y-11,16,8);ctx.fillRect(x-9,y+1,18,9);
+ ctx.fillStyle='#5b463e';ctx.fillRect(x-8,y-18,3,4);ctx.fillRect(x+5,y-18,3,4);
+ // rayitas atigradas
+ ctx.fillRect(x-6,y-12,3,4);ctx.fillRect(x+2,y-12,3,4);ctx.fillRect(x-8,y+2,3,5);ctx.fillRect(x+5,y+2,3,5);
+ ctx.fillStyle='#d8c9c1';ctx.fillRect(x-4,y-3,8,5);ctx.fillRect(x-7,y+2,14,6);
+ ctx.fillStyle='#251b2b';ctx.fillRect(x-5,y-9,3,3);ctx.fillRect(x+3,y-9,3,3);ctx.fillRect(x-1,y-5,3,2);
+ ctx.fillStyle='#ff9bd6';ctx.fillRect(x-3,y-4,6,2);ctx.fillRect(x-9,y+10,5,4);ctx.fillRect(x+4,y+10,5,4);
+ ctx.fillStyle='#8b817e';ctx.fillRect(x+10,y+1,7,3);ctx.fillRect(x+14,y-2,3,4);
 }
 function move(dir){if(!running)return;const step=10;if(dir==='up')player.y-=step;if(dir==='down')player.y+=step;if(dir==='left')player.x-=step;if(dir==='right')player.x+=step;player.x=Math.max(18,Math.min(W-18,player.x));player.y=Math.max(25,Math.min(H-18,player.y));hearts.forEach(h=>{if(!h.got&&Math.abs(h.x-player.x)<19&&Math.abs(h.y-player.y)<22){h.got=true;collected++;scoreEl.textContent='♡ '+collected+' / 5';if(collected===5)finish()}});draw()}
 function finish(){running=false;won=true;statusEl.textContent='MISIÓN COMPLETADA';titleEl.textContent='¡Los encontraste, Pao!';textEl.textContent='Recogiste todos los corazoncitos. 💗 Y aquí va tu recompensa: de todos los lugares donde podría estar mi corazón, mi favorito es contigo. Gracias por ser tú y por compartir tu historia conmigo. Te quiero muchísimo. — Irving ♡';start.textContent='Jugar otra vez ↻';overlay.hidden=false}
