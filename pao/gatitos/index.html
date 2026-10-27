@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#190f2d">
+<title>Gatitos del corazón ♡</title>
+<style>
+:root{--bg:#190f2d;--panel:#26183f;--pink:#ff8acb;--lav:#d9c3ff;--mint:#a4ffe0}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at top,#392052 0,#190f2d 62%);color:#fff0fb;font-family:ui-rounded,"Trebuchet MS",system-ui,sans-serif;display:flex;justify-content:center;padding:18px 12px 28px}
+main{width:min(100%,520px)}.top{text-align:center}.eyebrow{font:12px monospace;letter-spacing:2px;color:var(--mint)}h1{font-size:clamp(26px,7vw,38px);margin:8px 0;color:var(--pink);text-shadow:0 0 18px #ff8acb44}.sub{color:var(--lav);font-size:14px;line-height:1.5;margin:0 auto 16px;max-width:390px}
+.panel{background:#211433eF;border:2px solid #65447f;border-radius:18px;padding:14px;box-shadow:0 12px 38px #08041166}.stats{display:flex;justify-content:space-between;gap:8px;align-items:center;font:13px monospace;color:var(--mint);margin:0 2px 10px}.gamewrap{position:relative;border:2px solid #7b5694;border-radius:12px;overflow:hidden;background:#100d20}canvas{display:block;width:100%;height:auto;aspect-ratio:320/360;touch-action:none;image-rendering:pixelated}
+.overlay{position:absolute;inset:0;background:#120a20eF;display:flex;align-items:center;justify-content:center;text-align:center;padding:22px}.overlay[hidden]{display:none}.modal{max-width:300px}.kitty{font-size:46px;line-height:1.3}.modal h2{color:var(--pink);margin:8px 0}.modal p{font-size:14px;line-height:1.6;color:#eadcf8}.btn{border:0;border-radius:999px;background:var(--pink);color:#351333;font-weight:800;padding:13px 20px;font-size:15px;box-shadow:0 4px 0 #b94f92;cursor:pointer}.btn:active{transform:translateY(2px);box-shadow:0 2px 0 #b94f92}.controls{display:grid;grid-template-columns:repeat(3,58px);grid-template-rows:repeat(2,48px);justify-content:center;gap:7px;margin:14px auto 8px;touch-action:none}.control{border:1px solid #76558e;background:#38234e;color:#fff;border-radius:12px;font-size:22px;touch-action:none;user-select:none}.control:active{background:#6d3f83}.up{grid-column:2}.left{grid-column:1;grid-row:2}.down{grid-column:2;grid-row:2}.right{grid-column:3;grid-row:2}.help{text-align:center;font-size:12px;color:#c9b4df;line-height:1.5;margin:8px 0 0}.footer{text-align:center;color:#a991c5;font:11px monospace;margin-top:15px}.heartline{color:var(--pink)}
+@media(min-width:430px){.panel{padding:17px}}
+</style>
+</head>
+<body><main>
+<header class="top"><div class="eyebrow">♡ IRVING'S LITTLE ARCADE ♡</div><h1>Gatitos del corazón</h1><p class="sub">Una miniaventura para Pao. Ayuda a Michi a recoger 5 corazones perdidos por el jardín mágico. ✨</p></header>
+<section class="panel">
+<div class="stats"><span id="status">MISIÓN: EMPEZAR</span><span id="score">♡ 0 / 5</span></div>
+<div class="gamewrap"><canvas id="game" width="320" height="360" aria-label="Juego: mueve al gatito y recoge corazones"></canvas>
+<div class="overlay" id="overlay"><div class="modal"><div class="kitty">🐈‍⬛💗</div><h2 id="modalTitle">¡Hola, Pao!</h2><p id="modalText">Michi necesita tu ayuda para encontrar cinco corazones. Muévete por el jardín y recógelos todos para desbloquear un mensajito secreto de Irving. 💜</p><button class="btn" id="start">¡A jugar! ♡</button></div></div></div>
+<div class="controls" aria-label="Controles del juego"><button class="control up" data-dir="up" aria-label="Arriba">▲</button><button class="control left" data-dir="left" aria-label="Izquierda">◀</button><button class="control down" data-dir="down" aria-label="Abajo">▼</button><button class="control right" data-dir="right" aria-label="Derecha">▶</button></div>
+<p class="help">Usa las flechas, WASD o los botones. En celular, también puedes mantener presionado un botón. ♡</p>
+</section><div class="footer">LEVEL 01 · MADE WITH LOVE BY IRVING <span class="heartline">♥</span></div>
+</main>
+<script>
+(()=>{const c=document.getElementById('game'),ctx=c.getContext('2d'),overlay=document.getElementById('overlay'),start=document.getElementById('start'),scoreEl=document.getElementById('score'),statusEl=document.getElementById('status'),titleEl=document.getElementById('modalTitle'),textEl=document.getElementById('modalText');
+const W=320,H=360,T=20;let player={x:40,y:300},hearts=[],collected=0,running=false,won=false,last=0,held=null,holdTimer=null;
+const spots=[{x:60,y:60},{x:250,y:90},{x:160,y:150},{x:70,y:230},{x:250,y:285}];
+function reset(){player={x:40,y:300};hearts=spots.map((p,i)=>({...p,got:false,phase:i*.9}));collected=0;won=false;scoreEl.textContent='♡ 0 / 5';statusEl.textContent='MISIÓN: BUSCA CORAZONES';draw()}
+function px(x,y,color){ctx.fillStyle=color;ctx.fillRect(x,y,4,4)}
+function draw(){ctx.clearRect(0,0,W,H);ctx.fillStyle='#15132b';ctx.fillRect(0,0,W,H);
+ // checkerboard garden
+ for(let y=0;y<H;y+=20)for(let x=0;x<W;x+=20){ctx.fillStyle=((x/20+y/20)%2===0)?'#1b1935':'#201a39';ctx.fillRect(x,y,20,20)}
+ // little flowers / stars
+ for(let i=0;i<24;i++){let x=(i*47+13)%W,y=(i*71+27)%H;ctx.fillStyle=i%2?'#69508a':'#d68bbd';ctx.fillRect(x,y,3,3)}
+ // garden paths
+ ctx.fillStyle='#302348';ctx.fillRect(130,0,40,H);ctx.fillRect(0,170,W,25);
+ // tiny plants
+ for(let i=0;i<9;i++){let x=(i*37+12)%W,y=(i*43+20)%H;ctx.fillStyle='#5dbb9a';ctx.fillRect(x,y,4,8);ctx.fillRect(x-3,y+3,3,3)}
+ hearts.forEach(h=>{if(h.got)return;let bob=Math.sin(Date.now()/350+h.phase)*2;drawHeart(h.x,h.y+bob, '#ff78c6')});
+ drawCat(player.x,player.y);
+ // border
+ ctx.strokeStyle='#7d5b9c';ctx.lineWidth=3;ctx.strokeRect(2,2,W-4,H-4);
+}
+function drawHeart(x,y,color){ctx.fillStyle=color;ctx.fillRect(x-7,y-5,6,6);ctx.fillRect(x+1,y-5,6,6);ctx.fillRect(x-11,y-1,22,7);ctx.fillRect(x-7,y+6,14,5);ctx.fillRect(x-3,y+11,6,4);ctx.fillStyle='#ffd5ed';ctx.fillRect(x-5,y-3,3,3)}
+function drawCat(x,y){ // pixel kitten sprite
+ ctx.fillStyle='#0c0915';ctx.fillRect(x-12,y-4,24,17);ctx.fillRect(x-10,y-13,20,13);ctx.fillRect(x-10,y-20,6,8);ctx.fillRect(x+4,y-20,6,8);
+ ctx.fillStyle='#f5e9ff';ctx.fillRect(x-8,y-11,16,8);ctx.fillRect(x-9,y+1,18,9);
+ ctx.fillStyle='#ff9bd6';ctx.fillRect(x-8,y-18,3,4);ctx.fillRect(x+5,y-18,3,4);
+ ctx.fillStyle='#4d315f';ctx.fillRect(x-5,y-9,3,3);ctx.fillRect(x+3,y-9,3,3);ctx.fillRect(x-1,y-5,3,2);
+ ctx.fillStyle='#ffb6dc';ctx.fillRect(x-3,y-4,6,2);ctx.fillRect(x-9,y+10,5,4);ctx.fillRect(x+4,y+10,5,4);
+ ctx.fillStyle='#f5e9ff';ctx.fillRect(x+10,y+1,7,3);ctx.fillRect(x+14,y-2,3,4);
+}
+function move(dir){if(!running)return;const step=10;if(dir==='up')player.y-=step;if(dir==='down')player.y+=step;if(dir==='left')player.x-=step;if(dir==='right')player.x+=step;player.x=Math.max(18,Math.min(W-18,player.x));player.y=Math.max(25,Math.min(H-18,player.y));hearts.forEach(h=>{if(!h.got&&Math.abs(h.x-player.x)<19&&Math.abs(h.y-player.y)<22){h.got=true;collected++;scoreEl.textContent='♡ '+collected+' / 5';if(collected===5)finish()}});draw()}
+function finish(){running=false;won=true;statusEl.textContent='MISIÓN COMPLETADA';titleEl.textContent='¡Los encontraste, Pao!';textEl.textContent='Recogiste todos los corazoncitos. 💗 Y aquí va tu recompensa: de todos los lugares donde podría estar mi corazón, mi favorito es contigo. Gracias por ser tú y por compartir tu historia conmigo. Te quiero muchísimo. — Irving ♡';start.textContent='Jugar otra vez ↻';overlay.hidden=false}
+function begin(){reset();running=true;overlay.hidden=true;statusEl.textContent='MISIÓN: BUSCA CORAZONES';last=performance.now();requestAnimationFrame(loop)}
+function loop(t){if(!running)return;if(t-last>120){draw();last=t}requestAnimationFrame(loop)}
+start.addEventListener('click',begin);
+document.addEventListener('keydown',e=>{const map={ArrowUp:'up',w:'up',W:'up',ArrowDown:'down',s:'down',S:'down',ArrowLeft:'left',a:'left',A:'left',ArrowRight:'right',d:'right',D:'right'};if(map[e.key]){e.preventDefault();move(map[e.key])}});
+document.querySelectorAll('[data-dir]').forEach(b=>{const dir=b.dataset.dir;const down=e=>{e.preventDefault();move(dir);clearInterval(holdTimer);holdTimer=setInterval(()=>move(dir),130)};const up=()=>{clearInterval(holdTimer);holdTimer=null};b.addEventListener('pointerdown',down);['pointerup','pointercancel','pointerleave'].forEach(ev=>b.addEventListener(ev,up))});
+reset();
+})();
+</script></body></html>
