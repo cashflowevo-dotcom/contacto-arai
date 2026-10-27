@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#100d20">
+<title>Un mensaje para ti ✦</title>
+<style>
+:root{color-scheme:dark;--bg:#100d20;--pink:#ff9fd8;--lav:#c8b6ff;--mint:#a6ffe0}
+*{box-sizing:border-box}
+body{margin:0;min-height:100svh;display:grid;place-items:center;padding:22px;background:radial-gradient(ellipse at 15% 10%,#35234e 0,transparent 42%),radial-gradient(ellipse at 90% 90%,#1c3150 0,transparent 40%),var(--bg);color:#f6f0ff;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.card{width:min(100%,520px);border:1px solid #7969a8;border-radius:22px;overflow:hidden;background:rgba(17,14,34,.92);box-shadow:0 0 35px #8c5ad333,0 18px 55px #0007}
+.top{display:flex;align-items:center;gap:7px;padding:14px 17px;background:#211b38;border-bottom:1px solid #44365f}
+.dot{width:9px;height:9px;border-radius:50%;background:#ff8fa3}.dot:nth-child(2){background:#ffd58a}.dot:nth-child(3){background:#a6ffe0}
+.caption{margin-left:8px;color:#c8b6ff;font-size:12px;letter-spacing:.06em}
+main{padding:clamp(22px,6vw,36px)}.eyebrow{color:var(--mint);font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+h1{font-family:system-ui,sans-serif;font-weight:650;font-size:clamp(28px,7vw,40px);line-height:1.12;margin:15px 0 12px}h1 span{color:var(--pink)}
+.terminal{background:#0b0a14;border:1px solid #302747;border-radius:13px;padding:15px;color:#d9d1f4;font-size:13px;line-height:1.7;overflow-wrap:anywhere}
+.prompt{color:var(--mint)}.typing{white-space:pre-wrap}.cursor{display:inline-block;width:7px;height:14px;background:var(--pink);vertical-align:-2px;animation:blink 1s steps(2,start) infinite}@keyframes blink{to{visibility:hidden}}
+.heart{text-align:center;font-size:44px;margin:23px 0 5px;filter:drop-shadow(0 0 14px #ff9fd877);animation:float 2.8s ease-in-out infinite}@keyframes float{50%{transform:translateY(-5px)}}
+.hint{color:#b8aecf;font:14px/1.6 system-ui,sans-serif;text-align:center;margin:10px 0 18px}
+button{display:block;width:100%;border:0;border-radius:12px;padding:14px 18px;background:linear-gradient(100deg,#d9baff,#ffaddd);color:#24142f;font-weight:750;font-size:15px;cursor:pointer;box-shadow:0 7px 24px #c88cff2b}
+button:focus-visible{outline:3px solid white;outline-offset:3px}.message{display:none;margin-top:17px;padding:17px;border-radius:13px;border:1px solid #5b477a;background:#211831;color:#fff0fa;font:15px/1.75 system-ui,sans-serif}.message.show{display:block;animation:appear .5s ease both}@keyframes appear{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+footer{text-align:center;color:#a79abf;font-size:11px;padding:0 20px 19px}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important}}
+</style>
+</head>
+<body>
+<article class="card">
+<div class="top" aria-label="Ventana de terminal"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="caption">un_pequeño_mensaje.exe</span></div>
+<main>
+<div class="eyebrow">✦ conexión especial detectada</div>
+<h1>Hola, <span>Pao</span> ♡</h1>
+<div class="terminal">
+<div><span class="prompt">irving@corazón:~$</span> iniciando mensaje...</div>
+<div><span class="prompt">[ OK ]</span> destinataria favorita encontrada</div>
+<div><span class="prompt">[ OK ]</span> cariño cargado al 100%</div>
+<div><span class="prompt">mensaje:</span> <span class="typing" id="typing"></span><span class="cursor" aria-hidden="true"></span></div>
+</div>
+<div class="heart" aria-hidden="true">💗</div>
+<p class="hint">Hay algo guardado aquí especialmente para ti.</p>
+<button id="reveal" type="button">Abrir mi mensajito ✨</button>
+<section class="message" id="message" aria-live="polite">
+No hackeé nada… solo encontré otra manera de recordarte que eres especial para mí. 💜<br><br>
+Quería mandarte un rinconcito secreto de internet, hecho con cariño y un poquito de tecnología. Si te sacó una sonrisa, ya cumplió su misión. ♡<br><br>
+— Irving
+</section>
+</main>
+<footer>hecho con cariño · sin trucos, solo un detalle bonito ♡</footer>
+</article>
+<script>
+const text="una sorpresa hecha pensando en ti ♡";const target=document.getElementById("typing");let i=0;
+function typeNext(){if(i<text.length){target.textContent+=text.charAt(i++);setTimeout(typeNext,48)}}typeNext();
+document.getElementById("reveal").addEventListener("click",function(){document.getElementById("message").classList.add("show");this.textContent="Mensaje abierto 💗";this.disabled=true});
+</script>
+</body>
+</html>
